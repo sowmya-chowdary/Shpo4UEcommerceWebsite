@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ShopEase - Product Listing</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: black;
+    }
+
+    header {
+      background-color: #7b2ff7;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px;
+      background-color: white;
+    }
+
+    select {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    .product-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 30px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .card img {
+  width: 100%;
+  height: 180px;
+  object-fit: contain;
+  object-position: center;
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+
+    .card h3 {
+      margin: 10px 0 5px;
+    }
+
+    .card p {
+      margin: 5px 0;
+      font-weight: bold;
+      color: #555;
+    }
+
+    .card .rating {
+      color: #ff9529;
+      margin: 5px 0;
+    }
+
+    .card button {
+      background-color: #7b2ff7;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .card button:hover {
+      background-color: #6610f2;
+    }
+
+    .nav-links {
+      text-align: center;
+      padding: 10px;
+      background-color: white;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: #7b2ff7;
+      font-weight: bold;
+      margin: 0 10px;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 500px) {
+      .controls {
+        flex-direction: column;
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>🛍️ Shop4U</h1>
+    <p>Your Smart Shopping Assistant</p>
+  </header>
+
+  <div class="controls">
+    <select id="categoryFilter">
+      <option value="all">All Categories</option>
+      <option value="electronics">Electronics</option>
+      <option value="clothing">Clothing</option>
+      <option value="furniture">Furniture</option>
+      <option value="sports">Sports</option>
+    </select>
+
+    <select id="sortOption">
+      <option value="default">Sort By</option>
+      <option value="price-low-high">Price: Low to High</option>
+      <option value="price-high-low">Price: High to Low</option>
+      <option value="rating-high-low">Rating: High to Low</option>
+    </select>
+  </div>
+
+  <div class="nav-links">
+    <a href="checkout.html">Go to Checkout 🛒</a>
+    <a href="index.html" onclick="logout()">Logout</a>
+  </div>
+
+  <div id="productContainer" class="product-container"></div>
+
+  <script>
+    const baseProducts = [
+      { name: "Bluetooth Headphones", price: 999, category: "electronics", rating: 4.5, img: "https://tse1.mm.bing.net/th/id/OIP._cufufLVgh3qsJWd0vJ5MQHaHa?pid=Api&P=0&h=180" },
+      { name: "Wireless Mouse", price: 499, category: "electronics", rating: 4.2, img: "https://i5.walmartimages.com/asr/e5501223-64c2-4524-8b5d-4f44ad73d17a.f4e1d414f885eda879e0a7d09a9bc936.jpeg" },
+      { name: "Cotton T-Shirt", price: 799, category: "clothing", rating: 3.9, img: "https://tse1.mm.bing.net/th/id/OIF.WFY2H759q3yeT8Ur9JBRfA?pid=Api&P=0&h=180" },
+      { name: "Office Chair", price: 2999, category: "furniture", rating: 4.6, img: "https://i5.walmartimages.com/asr/c449c8f1-5159-44ba-9fc0-77d184c901ab_1.97a7a57940ba061651c1918747e1c6ab.jpeg" },
+      { name: "Football", price: 699, category: "sports", rating: 4.3, img: "https://tse1.mm.bing.net/th/id/OIP.bYZSO4d7oCxevapIz1uG-AHaHa?pid=Api&P=0&h=180" },
+      { name: "Smartwatch", price: 1499, category: "electronics", rating: 4.4, img: "https://tse4.mm.bing.net/th/id/OIP.rRAN-_-LES4FI3GEOsBj2AHaHa?pid=Api&P=0&h=180" },
+      { name: "Running Shoes", price: 2199, category: "sports", rating: 4.1, img: "https://tse2.mm.bing.net/th/id/OIP.Oe6iARK7AcH2zyVt0l9LXQHaF5?pid=Api&P=0&h=180" },
+      { name: "Jeans", price: 1299, category: "clothing", rating: 4.0, img: "https://tse2.mm.bing.net/th/id/OIP.Vv0XgHISnI6vXcFGDVh9egHaHa?pid=Api&P=0&h=180" },
+      { name: "Bookshelf", price: 1999, category: "furniture", rating: 4.5, img: "https://tse3.mm.bing.net/th/id/OIP.4MQD-5ptx94PMYu93Y0GTAHaKi?pid=Api&P=0&h=180" },
+      { name: "HD Webcam", price: 1599, category: "electronics", rating: 4.2, img: "https://tse3.mm.bing.net/th/id/OIP.4MQD-5ptx94PMYu93Y0GTAHaKi?pid=Api&P=0&h=180" }
+    ];
+
+    const products = [];
+    for (let i = 0; i < 5; i++) {
+      baseProducts.forEach((p, idx) => {
+        products.push({
+          id: i * baseProducts.length + idx + 1,
+          name: `${p.name} #${i + 1}`,
+          price: p.price + i * 20,
+          category: p.category,
+          rating: Math.min(5.0, (p.rating + i * 0.05).toFixed(1)),
+          img: p.img
+        });
+      });
+    }
+
+    const container = document.getElementById("productContainer");
+    const filter = document.getElementById("categoryFilter");
+    const sort = document.getElementById("sortOption");
+
+    function displayProducts(list) {
+      container.innerHTML = "";
+      list.forEach(p => {
+        container.innerHTML += `
+          <div class="card">
+            <img src="${p.img}" alt="${p.name}">
+            <h3>${p.name}</h3>
+            <p>₹${p.price}</p>
+            <div class="rating">⭐ ${p.rating}</div>
+            <button onclick="addToCart(${p.id})">Add to Cart</button>
+          </div>
+        `;
+      });
+    }
+
+    function addToCart(id) {
+      const item = products.find(p => p.id === id);
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const exists = cart.find(c => c.id === id);
+
+      if (exists) {
+        exists.quantity += 1;
+      } else {
+        cart.push({ ...item, quantity: 1 });
+      }
+
+      localStorage.setItem("cart", JSON.stringify(cart));
+      alert(`${item.name} added to cart!`);
+    }
+
+    function filterAndSortProducts() {
+      let result = [...products];
+
+      const selectedCategory = filter.value;
+      const sortOption = sort.value;
+
+      if (selectedCategory !== "all") {
+        result = result.filter(p => p.category === selectedCategory);
+      }
+
+      if (sortOption === "price-low-high") {
+        result.sort((a, b) => a.price - b.price);
+      } else if (sortOption === "price-high-low") {
+        result.sort((a, b) => b.price - a.price);
+      } else if (sortOption === "rating-high-low") {
+        result.sort((a, b) => b.rating - a.rating);
+      }
+
+      displayProducts(result);
+    }
+
+    filter.addEventListener("change", filterAndSortProducts);
+    sort.addEventListener("change", filterAndSortProducts);
+
+    function logout() {
+      localStorage.removeItem("user");
+      window.location.href = "index.html";
+    }
+
+    // Initial load
+    displayProducts(products);
+    localStorage.setItem('selectedProduct', JSON.stringify(product));
+window.location.href = 'product-detail.html';
+
+  </script>
+
+</body>
+</html>

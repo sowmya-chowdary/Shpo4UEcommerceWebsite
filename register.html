@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register | ShopEase</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #36d1dc, #5b86e5);
+      font-family: 'Segoe UI', sans-serif;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .register-box {
+      background-color: #fff;
+      padding: 40px 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 420px;
+      text-align: center;
+    }
+
+    .register-box h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    .register-box input {
+      width: 100%;
+      padding: 12px 15px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    .register-box button {
+      width: 100%;
+      padding: 12px;
+      background-color: #36d1dc;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: background 0.3s ease;
+    }
+
+    .register-box button:hover {
+      background-color: #2bb1c6;
+    }
+
+    .message {
+      margin-top: 15px;
+      font-size: 0.9rem;
+      color: green;
+    }
+
+    .error {
+      color: red;
+    }
+
+    a.login-link {
+      font-size: 0.85rem;
+      color: #5b86e5;
+      text-decoration: none;
+      margin-top: 10px;
+      display: inline-block;
+    }
+
+    a.login-link:hover {
+      text-decoration: underline;
+    }
+
+    @media (max-width: 480px) {
+      .register-box {
+        padding: 30px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="register-box">
+    <h2>Create Your ShopEase Account</h2>
+    <input type="text" id="name" placeholder="Full Name">
+    <input type="email" id="email" placeholder="Email">
+    <input type="text" id="username" placeholder="Username">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="register()">Register</button>
+
+    <p class="message" id="msg"></p>
+
+    <a href="index.html" class="login-link">Already have an account? Login here</a>
+  </div>
+
+  <script>
+    function register() {
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      const msg = document.getElementById("msg");
+
+      if (!name || !email || !username || !password) {
+        msg.textContent = "Please fill all fields";
+        msg.className = "message error";
+        return;
+      }
+
+      const user = { name, email, username, password };
+      localStorage.setItem("registeredUser", JSON.stringify(user));
+
+      msg.textContent = "Registration successful! You can now log in.";
+      msg.className = "message";
+    }
+  </script>
+</body>
+</html>
